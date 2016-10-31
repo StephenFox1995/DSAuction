@@ -21,8 +21,8 @@ public class Client {
 
       // Get input from keyboard.
       Scanner scanner = new Scanner(System.in);
-
       String message, response;
+
       do {
         System.out.print("Enter message: ");
         message = scanner.nextLine();
@@ -33,6 +33,11 @@ public class Client {
 
     } catch(IOException e) {
       System.out.println("Could not connect to server.");
+    }
+    finally {
+      try {
+        socket.close();
+      } catch (IOException e) { System.exit(1); }
     }
   }
 }

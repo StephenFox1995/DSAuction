@@ -62,8 +62,7 @@ public class Server {
     } finally {
       try {
         socket.close();
-      } catch (IOException e) {
-      }
+      } catch (IOException e) { }
     }
   }
 }
