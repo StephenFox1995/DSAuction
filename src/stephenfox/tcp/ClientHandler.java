@@ -1,5 +1,8 @@
 package stephenfox.tcp;
 
+import stephenfox.auction.AuctionItem;
+import stephenfox.auction.Auctioneer;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -31,10 +34,12 @@ public class ClientHandler implements Runnable {
   @Override
   public void run() {
     String message = input.nextLine();
+    Auctioneer auctioneer = Auctioneer.sharedInstance();
+    AuctionItem auctionItem = auctioneer.currentAuctionItem();
 
     // New thread for this client.
     while (!message.equals(Server.ServerCommandMessages.SERVER_CLOSE)) {
-      output.println("Hello client!");
+      output.println("Current auction item: " + auctionItem.getName());
       message = input.nextLine();
     }
     output.println("Bye Client!");

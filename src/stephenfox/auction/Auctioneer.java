@@ -6,6 +6,7 @@ package stephenfox.auction;
 public class Auctioneer {
 
   private static Auctioneer sharedInstance;
+  private AuctionItem auctionItem;
 
   public static Auctioneer sharedInstance() {
     if (sharedInstance == null) {
@@ -18,6 +19,6 @@ public class Auctioneer {
    * Returns the current item being auctioned.
    * */
   public AuctionItem currentAuctionItem() {
-    return null;
+    return AuctionList.getRandomAuctionItem();
   }
 }

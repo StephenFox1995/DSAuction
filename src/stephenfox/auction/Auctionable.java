@@ -4,9 +4,11 @@ package stephenfox.auction;
  * Created by stephenfox on 31/10/2016.
  */
 public interface Auctionable {
-  String setName(String name);
+  void setName(String name);
   String getName();
-  int getBasePrice();
-  int getAuctionPrice();
-  void increaseAuctionPrice(int amount);
+  double getBasePrice();
+  double getAuctionPrice();
+  void increaseAuctionPrice(double amount);
+  boolean hasExpired();
+  void auction(AuctionExpiration expirationCallback);
 }
