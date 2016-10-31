@@ -26,6 +26,7 @@ public class Server {
 
   /**
    * Begins the server to listen on the specified port.
+   * @param port The port to listen on.
    */
   public void beginListening(int port) {
     ServerSocket serverSocket = null;
@@ -41,28 +42,25 @@ public class Server {
     } while (true);
   }
 
-
+  /**
+   * Handle any incoming connection request from client.
+   * @param serverSocket The server socket used to accept the connection.
+   * */
   public void handleConnection(ServerSocket serverSocket) {
-    Socket socket = null;
     try {
-      socket = serverSocket.accept();
-      Scanner input = new Scanner(socket.getInputStream());
-      String message = input.nextLine();
-      PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
-
-      while (!message.equals("**CLOSE**")) {
-        output.println(message);
-        output.println("Hello Bob!");
-        message = input.nextLine();
-      }
-      output.println("Bye Bob!");
-
+      Socket client = serverSocket.accept();
+      ClientHandler clientHandler = new ClientHandler(client);
+      new Thread(clientHandler).start(); // Start new thread for this connection.
     } catch (IOException e) {
-
-    } finally {
-      try {
-        socket.close();
-      } catch (IOException e) { }
+      e.printStackTrace();
     }
+  }
+
+
+  /**
+   * Private class to hold command messages that are used by the server.
+   * */
+  public static class ServerCommandMessages {
+    public static String SERVER_CLOSE = "**CLOSE**";
   }
 }

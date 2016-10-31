@@ -5,4 +5,19 @@ package stephenfox.auction;
  */
 public class Auctioneer {
 
+  private static Auctioneer sharedInstance;
+
+  public static Auctioneer sharedInstance() {
+    if (sharedInstance == null) {
+      sharedInstance = new Auctioneer();
+    }
+    return sharedInstance;
+  }
+
+  /**
+   * Returns the current item being auctioned.
+   * */
+  public AuctionItem currentAuctionItem() {
+    return null;
+  }
 }
