@@ -27,14 +27,14 @@ public class Bidder implements Registrable {
    * @param message The message that was send from the client.
    * */
   public void handleClientMessage(String message) {
+    System.out.println("New message recieved from client: " + message);
     Auctioneer auctioneer = Auctioneer.sharedInstance();
 
-    if (message.contains(Server.ServerCommandMessages.NEW_CLIENT_MESSAGE)) {
+    if (message.contains(Server.ServerCommandMessages.CLIENT_JOIN_AUCTION_COMMAND)) {
       // Register with auctioneer.
       auctioneer.registerBidder(this);
-      auctionInfoMessage("Successfully joined auction");
     }
-    else if (message.contains(Server.ServerCommandMessages.CLIENT_BID_MESSAGE)) {
+    else if (message.contains(Server.ServerCommandMessages.CLIENT_BID_COMMAND)) {
       AuctionItem item = auctioneer.getCurrentAuctionItem();
       item.increaseAuctionPrice(29.0);
       auctioneer.newBid(item);
@@ -49,7 +49,7 @@ public class Bidder implements Registrable {
   @Override
   public void auctionInfoMessage(String message) {
     // Message the client of new info about the auction.
+    System.out.println("Sending message: " + message);
     this.clientHandler.messageClient(message);
   }
-
 }

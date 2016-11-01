@@ -10,7 +10,7 @@ public class Auctioneer {
   private static Auctioneer sharedInstance;
   private AuctionItem auctionItem;
   private ArrayList<Bidder> bidders;
-  private String auctionInfo = "Welcome to the auction, type \"bid\" to make a new bid";
+  private String auctionInfo = "Welcome to the auction, type \"bid\" to make a new bid.\n";
 
   private Auctioneer() {
     this.bidders = new ArrayList<>();
@@ -31,7 +31,7 @@ public class Auctioneer {
    * */
   public void registerBidder(Bidder bidder) {
     if (bidders.contains(bidder)) {
-      System.out.println("Bidder already in auction");
+      bidder.auctionInfoMessage("Bidder already in auction");
       return;
     }
     bidders.add(bidder);
@@ -47,6 +47,7 @@ public class Auctioneer {
    * */
   private void messageBidders(String message) {
     for (Bidder b : bidders) {
+      System.out.println("Messaged");
       b.auctionInfoMessage(message);
     }
   }

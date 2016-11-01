@@ -65,7 +65,7 @@ public class Server {
     public static final String SERVER_CLOSE = "**CLOSE**";
     public static final String UNKNOWN_COMMAND = "Unknown Command";
 
-    public static final String CLIENT_BID_MESSAGE = "bid"; // Command used to make new bid.
-    public static final String NEW_CLIENT_MESSAGE = "new"; // Command used to join the auction.
+    public static final String CLIENT_BID_COMMAND = "bid"; // Command used to make new bid.
+    public static final String CLIENT_JOIN_AUCTION_COMMAND = "join"; // Command used to join the auction.
   }
 }
