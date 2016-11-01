@@ -9,7 +9,8 @@ import stephenfox.tcp.Server;
 public class Bidder implements Registrable {
 
   private ClientHandler clientHandler;
-  private final String CLIENT_BID_MESSAGE = "bid";
+
+
 
   /**
    * Constructs a new instance with reference to a ClientHandler object.
@@ -28,12 +29,18 @@ public class Bidder implements Registrable {
   public void handleClientMessage(String message) {
     Auctioneer auctioneer = Auctioneer.sharedInstance();
 
-    if (message.contains(CLIENT_BID_MESSAGE)) {
+    if (message.contains(Server.ServerCommandMessages.NEW_CLIENT_MESSAGE)) {
+      // Register with auctioneer.
+      auctioneer.registerBidder(this);
+      auctionInfoMessage("Successfully joined auction");
+    }
+    else if (message.contains(Server.ServerCommandMessages.CLIENT_BID_MESSAGE)) {
       AuctionItem item = auctioneer.getCurrentAuctionItem();
       item.increaseAuctionPrice(29.0);
       auctioneer.newBid(item);
-    } else {
-      auctionInfoMessage(Server.ServerCommandMessages.UNKOWN_COMMAND);
+    }
+    else {
+      auctionInfoMessage(Server.ServerCommandMessages.UNKNOWN_COMMAND);
     }
   }
 

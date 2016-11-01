@@ -47,19 +47,16 @@ public class ClientHandler implements Runnable {
   @Override
   public void run() {
     String inputMessage = input.nextLine();
-    // Register with auctioneer.
-    Auctioneer auctioneer = Auctioneer.sharedInstance();
-    // Create new Bidder instance to represent this client in auction.
-    auctioneer.registerBidder(bidder);
 
     // New thread for this client.
     while (!inputMessage.equals(Server.ServerCommandMessages.SERVER_CLOSE)) {
       // Send output message back to client.
       output.println(outputMessage);
       outputMessage = "";
+
+      // Any message send from the client, forward to the bidder to handle.
       inputMessage = input.nextLine();
       bidder.handleClientMessage(inputMessage);
-
     }
     output.println("Bye Client!");
   }
