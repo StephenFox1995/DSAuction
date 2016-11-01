@@ -1,5 +1,7 @@
 package stephenfox.auction;
 
+import java.util.ArrayList;
+
 /**
  * Created by stephenfox on 31/10/2016.
  */
@@ -7,6 +9,13 @@ public class Auctioneer {
 
   private static Auctioneer sharedInstance;
   private AuctionItem auctionItem;
+  private ArrayList<Bidder> bidders;
+
+
+  private Auctioneer() {
+    this.bidders = new ArrayList<>();
+    auctionItem = AuctionList.getRandomAuctionItem();
+  }
 
   public static Auctioneer sharedInstance() {
     if (sharedInstance == null) {
@@ -16,9 +25,24 @@ public class Auctioneer {
   }
 
   /**
-   * Returns the current item being auctioned.
+   * Registers a new Bidder into the auction.
+   * @param bidder A new bidder to registerBidder to the auction.
+   *               A bidder can only be registered once to the auction.
    * */
-  public AuctionItem currentAuctionItem() {
-    return AuctionList.getRandomAuctionItem();
+  public void registerBidder(Bidder bidder) {
+    if (bidders.contains(bidder)) {
+      System.out.println("Bidder already in auction");
+      return;
+    }
+    bidders.add(bidder);
+    // Once the bidder has been registered, notify of the current AuctionItem.
+    bidder.auctionInfoMessage("The current auction item is: " + auctionItem.getName());
+    System.out.println("New bidder has joined the auction");
+  }
+
+  private void notifyBidders() {
+    for (Bidder b : bidders) {
+      b.auctionInfoMessage("New bid made for item: " + auctionItem.getName() + " price: " + auctionItem.getAuctionPrice());
+    }
   }
 }

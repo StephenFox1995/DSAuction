@@ -1,9 +1,8 @@
 package stephenfox.tcp;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.*;
-import java.util.Scanner;
+
 
 /**
  * Created by stephenfox on 31/10/2016.
@@ -32,9 +31,9 @@ public class Server {
     ServerSocket serverSocket = null;
     try {
       serverSocket = new ServerSocket(port);
-      System.out.print("Listening on port: " + port);
+      System.out.println("Listening on port: " + port);
     } catch (IOException e) {
-      System.out.print("Unable to open port: " + port + " " + e.getMessage());
+      System.out.println("Unable to open port: " + port + " " + e.getMessage());
       System.exit(1);
     }
     do {
@@ -43,7 +42,9 @@ public class Server {
   }
 
   /**
-   * Handle any incoming connection request from client.
+   * Handle any incoming connection request from client
+   * and set up ClientHandler to handle communications back to the client.
+   *
    * @param serverSocket The server socket used to accept the connection.
    * */
   public void handleConnection(ServerSocket serverSocket) {

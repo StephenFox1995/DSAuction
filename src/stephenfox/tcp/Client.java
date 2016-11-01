@@ -37,7 +37,11 @@ public class Client {
     finally {
       try {
         socket.close();
-      } catch (IOException e) { System.exit(1); }
+      } catch (IOException e) {
+        System.out.println("Error setting up socket.");
+      } catch (NullPointerException e) {
+        System.out.println("Error setting up socket.");
+      }
     }
   }
 }
