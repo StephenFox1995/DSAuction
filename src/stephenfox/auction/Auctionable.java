@@ -8,7 +8,7 @@ public interface Auctionable {
   String getName();
   double getBasePrice();
   double getAuctionPrice();
-  void increaseAuctionPrice(double amount);
+  void increaseAuctionPrice(double amount) throws AuctionPriceException;
   boolean hasExpired();
   void auction(AuctionExpiration expirationCallback);
 }

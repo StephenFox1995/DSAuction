@@ -12,6 +12,8 @@ import java.util.Scanner;
 public class Client {
   private ServerResponseHandler serverResponseHandler;
   private KeyboardInputHandler keyboardInputHandler;
+  private Scanner keyboardScanner;
+  private PrintWriter output;
 
   public void accessServer(InetAddress host, int port) {
     Socket socket = null;
@@ -20,10 +22,23 @@ public class Client {
       socket = new Socket(host, port);
       System.out.println("Connect to server on port: " + port);
 
+      keyboardScanner = new Scanner(System.in);
+      output = new PrintWriter(socket.getOutputStream(), true);
+
       // Handle Keyboard inputs from user on new thread.
-      setupKeyboardInputHandler(socket);
+//      setupKeyboardInputHandler(socket);
       // Handle server responses on a new thread.
       setupServerResponseHandler(socket);
+
+      String commandForServer;
+      // Ask the server to allow this client to join.
+      output.println("join");
+      do {
+        System.out.println("Enter command: ");
+        commandForServer = keyboardScanner.nextLine();
+        output.println(commandForServer); // Send message to server.
+      }
+      while (!commandForServer.equals("QUIT"));
 
     } catch(IOException e) {
       System.out.println("Could not connect to server.");
@@ -80,11 +95,12 @@ public class Client {
       do {
         System.out.print("Enter command: ");
         commandForServer = keyboardScanner.nextLine();
-        System.out.println(commandForServer);
+        System.out.print(output);
         output.println(commandForServer); // Send message to server.
       }
       while (!commandForServer.equals("QUIT"));
     }
+
   }
 
 
@@ -105,6 +121,7 @@ public class Client {
         if (serverResponse.hasNextLine()) {
           String response = serverResponse.nextLine();
           System.out.print(response);
+          System.out.flush();
         }
       }
     }

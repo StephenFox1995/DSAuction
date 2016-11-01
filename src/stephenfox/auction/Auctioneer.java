@@ -56,6 +56,8 @@ public class Auctioneer {
    * @param auctionItem The auction item currently bidding.
    * */
   public void newBid(AuctionItem auctionItem) {
+    double newBidPrice = auctionItem.getAuctionPrice() - this.auctionItem.getAuctionPrice();
+
     messageBidders("New bid made for item: " + auctionItem.getName() + " price: " + auctionItem.getAuctionPrice());
     this.auctionItem = auctionItem;
   }

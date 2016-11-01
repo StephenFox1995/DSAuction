@@ -27,7 +27,7 @@ public class Bidder implements Registrable {
    * @param message The message that was send from the client.
    * */
   public void handleClientMessage(String message) {
-    System.out.println("New message recieved from client: " + message);
+    System.out.println("New message received from client: " + message);
     Auctioneer auctioneer = Auctioneer.sharedInstance();
 
     if (message.contains(Server.ServerCommandMessages.CLIENT_JOIN_AUCTION_COMMAND)) {
@@ -35,8 +35,30 @@ public class Bidder implements Registrable {
       auctioneer.registerBidder(this);
     }
     else if (message.contains(Server.ServerCommandMessages.CLIENT_BID_COMMAND)) {
+      String[] commandSplit = message.split(" ");
+      String bidAmountString;
+      double bidAmount = 0;
+
+      if (commandSplit.length > 1) {
+        bidAmountString = commandSplit[1];
+        try {
+          bidAmount = Double.parseDouble(bidAmountString);
+        } catch (NumberFormatException e) {
+          auctionInfoMessage(Server.ServerCommandMessages.INVALID_BID_FORMAT_COMMAND);
+          return;
+        }
+      } else {
+        auctionInfoMessage(Server.ServerCommandMessages.INVALID_BID_FORMAT_COMMAND);
+        return;
+      }
+
       AuctionItem item = auctioneer.getCurrentAuctionItem();
-      item.increaseAuctionPrice(29.0);
+      try {
+        item.increaseAuctionPrice(bidAmount);
+      } catch (AuctionPriceException e) {
+        auctionInfoMessage(e.getMessage());
+        return;
+      }
       auctioneer.newBid(item);
     }
     else {
