@@ -62,6 +62,7 @@ public class Server {
    * Private class to hold command messages that are used by the server.
    * */
   public static class ServerCommandMessages {
-    public static String SERVER_CLOSE = "**CLOSE**";
+    public static final String SERVER_CLOSE = "**CLOSE**";
+    public static final String UNKOWN_COMMAND = "Unknown Command";
   }
 }

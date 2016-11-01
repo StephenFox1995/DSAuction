@@ -10,7 +10,7 @@ public class Auctioneer {
   private static Auctioneer sharedInstance;
   private AuctionItem auctionItem;
   private ArrayList<Bidder> bidders;
-
+  private String auctionInfo = "Welcome to the auction, type \"bid\" to make a new bid";
 
   private Auctioneer() {
     this.bidders = new ArrayList<>();
@@ -37,12 +37,28 @@ public class Auctioneer {
     bidders.add(bidder);
     // Once the bidder has been registered, notify of the current AuctionItem.
     bidder.auctionInfoMessage("The current auction item is: " + auctionItem.getName());
+    bidder.auctionInfoMessage(auctionInfo);
     System.out.println("New bidder has joined the auction");
   }
 
-  private void notifyBidders() {
+  /**
+   * Messages all bidders.
+   * @param message The message to send to the bidder.
+   * */
+  private void messageBidders(String message) {
     for (Bidder b : bidders) {
-      b.auctionInfoMessage("New bid made for item: " + auctionItem.getName() + " price: " + auctionItem.getAuctionPrice());
+      b.auctionInfoMessage(message);
     }
+  }
+  /**
+   * Makes a new bid for the current Auction item.
+   * @param auctionItem The auction item currently bidding.
+   * */
+  public void newBid(AuctionItem auctionItem) {
+    messageBidders("New bid made for item: " + auctionItem.getName() + " price: " + auctionItem.getAuctionPrice());
+    this.auctionItem = auctionItem;
+  }
+  public AuctionItem getCurrentAuctionItem() {
+    return auctionItem;
   }
 }

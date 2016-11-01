@@ -11,26 +11,28 @@ import java.util.Scanner;
  */
 public class Client {
 
+  private Scanner serverResponse;
+  private PrintWriter output;
+  private Scanner keyboardScanner;
+
+
   public void accessServer(InetAddress host, int port) {
     Socket socket = null;
     try {
+      // Connect to server.
       socket = new Socket(host, port);
       System.out.println("Connect to server on port: " + port);
-      Scanner input = new Scanner(socket.getInputStream());
-      PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
+
+      serverResponse = new Scanner(socket.getInputStream());
+      output = new PrintWriter(socket.getOutputStream(), true);
 
       // Get input from keyboard.
-      Scanner scanner = new Scanner(System.in);
-      String message, response;
-
-      do {
+      keyboardScanner = new Scanner(System.in);
+      while (true) {
         System.out.print("Enter message: ");
-        message = scanner.nextLine();
-        output.println(message);
-        response = input.nextLine();
-        System.out.println(response.toString());
-      } while (true);
-
+        output.println(keyboardScanner.nextLine()); // Send message to server.
+        System.out.println(serverResponse.nextLine());
+      }
     } catch(IOException e) {
       System.out.println("Could not connect to server.");
     }

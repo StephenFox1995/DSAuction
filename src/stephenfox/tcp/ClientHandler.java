@@ -1,5 +1,6 @@
 package stephenfox.tcp;
 
+import stephenfox.auction.AuctionItem;
 import stephenfox.auction.Auctioneer;
 import stephenfox.auction.Bidder;
 
@@ -57,6 +58,8 @@ public class ClientHandler implements Runnable {
       output.println(outputMessage);
       outputMessage = "";
       inputMessage = input.nextLine();
+      bidder.handleClientMessage(inputMessage);
+
     }
     output.println("Bye Client!");
   }
