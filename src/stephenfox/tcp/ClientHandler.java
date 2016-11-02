@@ -18,16 +18,20 @@ public class ClientHandler implements Runnable {
   private DataInputStream inputStream;
   private DataOutputStream outputStream;
   private Bidder bidder;
-  private String outputMessage = "";
   private Queue<String> outputMessageQueue;
   private Queue<String> inputMessageQueue;
 
   public ClientHandler(Socket socket) {
     this.socket = socket;
-    this.inputMessageQueue = new LinkedList<String>();
-    this.outputMessageQueue = new LinkedList<String>();
+
+    this.inputMessageQueue = new LinkedList<>();
+    this.outputMessageQueue = new LinkedList<>();
 
     try {
+      // Set time out for socket, so input stream does not constantly block, which
+      // gives the server the chance to check on updates that may have been sent from other clients, such
+      // as new bids or auction timeouts etc.
+      this.socket.setSoTimeout(1000);
       this.inputStream = new DataInputStream(this.socket.getInputStream());
       this.outputStream = new DataOutputStream(this.socket.getOutputStream());
       this.bidder = new Bidder(this);
@@ -84,6 +88,7 @@ public class ClientHandler implements Runnable {
     try {
       String inputMessage = inputStream.readUTF();
       inputMessageQueue.add(inputMessage);
-    } catch (IOException e) { }
+    } catch (IOException e) {
+    }
   }
 }
