@@ -12,6 +12,7 @@ public class Client {
 
   private Socket socket;
   private KeyboardInputHandler keyboardInputHandler;
+  private ServerResponseHandler serverResponseHandler;
 
   public void accessServer(InetAddress host, int port) {
     try {
@@ -20,11 +21,12 @@ public class Client {
 
       // Setup thread for keyboard inputs.
       try {
+        setupServerResponseHandler();
         setupKeyboardHandler();
+
       } catch (IOException e) {
         System.out.println(e.getMessage());
       }
-
     } catch (IOException e) {
       System.out.println("Error opening socket. " + e.getMessage());
     }
@@ -35,6 +37,13 @@ public class Client {
     new Thread(keyboardInputHandler).start();
   }
 
+  private void setupServerResponseHandler() throws IOException {
+    serverResponseHandler = new ServerResponseHandler(socket);
+    new Thread(serverResponseHandler).start();
+  }
+
+  /**
+   * Handles keyboard inputs on a separate thread.*/
   private class KeyboardInputHandler implements Runnable {
     private BufferedReader keyboard;
     private DataOutputStream outputStream;
@@ -51,7 +60,6 @@ public class Client {
         try {
           System.out.print("Enter command:");
           message = keyboard.readLine();
-          System.out.println("Going to send: " + message);
           outputStream.writeUTF(message);
           outputStream.flush();
         } catch (IOException e) { }
@@ -59,4 +67,26 @@ public class Client {
     }
   }
 
+  /**
+   * Handles server response on a separate thread.
+   * */
+  private class ServerResponseHandler implements Runnable {
+    private DataInputStream serverResponse;
+
+    ServerResponseHandler(Socket socket) throws IOException {
+      serverResponse = new DataInputStream(socket.getInputStream());
+    }
+
+    @Override
+    public void run() {
+      String serverMessage;
+      while(true) {
+        try {
+          serverMessage = serverResponse.readUTF();
+          System.out.println();
+          System.out.println("Server says: " + serverMessage);
+        } catch (IOException e) { }
+      }
+    }
+  }
 }

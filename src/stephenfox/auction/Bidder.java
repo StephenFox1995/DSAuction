@@ -13,7 +13,7 @@ public class Bidder implements Registrable {
 
   /**
    * Constructs a new instance with reference to a ClientHandler object.
-   * The ClientHandler object will be messaged, when new information about the current auction is anounced
+   * The ClientHandler object will be messaged, when new information about the current auction is announced
    * from the auctioneer.
    * @param clientHandler The client handler object.
    * */

@@ -48,6 +48,7 @@ public class Auctioneer {
    * @param message The message to send to the bidder.
    * */
   private void messageBidders(String message) {
+    System.out.println("Bidder count: " + bidders.size());
     for (Bidder b : bidders) {
       b.auctionInfoMessage(message);
     }

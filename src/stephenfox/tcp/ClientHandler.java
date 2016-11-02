@@ -51,6 +51,7 @@ public class ClientHandler implements Runnable {
     String inputMessage = "";
     while(true) {
       if (!outputMessage.isEmpty()) {
+        System.out.println("Sending message to client: " + outputMessage + Thread.currentThread().getName());
         // Send output message back to client.
         sendMessage(outputMessage);
       }
@@ -59,14 +60,15 @@ public class ClientHandler implements Runnable {
       inputMessage = readMessage();
       bidder.handleClientMessage(inputMessage);
     }
-//    sendMessage("Bye");
   }
 
   private void sendMessage(String message) {
     try {
       outputStream.writeUTF(message);
       outputStream.flush();
-    } catch (IOException e) { }
+    } catch (IOException e) {
+      System.out.println("Could not send message to client");
+    }
   }
 
   private String readMessage() {
