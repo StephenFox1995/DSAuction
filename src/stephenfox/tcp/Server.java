@@ -57,28 +57,19 @@ public class Server {
     try {
       Socket client = serverSocket.accept();
       ClientHandler clientHandler = new ClientHandler(client);
-      messageClients("New bidder has joined");
       clients.add(clientHandler);
       new Thread(clientHandler).start(); // Start new thread for this connection.
-      // Send startup message.
-      clientHandler.messageClient(ServerCommandMessages.START_UP_MESSAGE);
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
-  public synchronized void messageClients(String message) {
-    for (ClientHandler c: clients) {
-      c.messageClient(message);
-    }
-  }
 
   /**
    * Private class to hold command messages that are used by the server.
    * */
   public static class ServerCommandMessages {
     public static final String SERVER_CLOSE = "**CLOSE**";
-    public static final String START_UP_MESSAGE = "Type join to start bidding.";
     public static final String UNKNOWN_COMMAND = "Unknown Command";
     public static final String INVALID_BID_FORMAT_COMMAND = "Unsupported format, expected: bid 00.00 got bid";
     public static final String CLIENT_BID_COMMAND = "bid"; // Command used to make new bid.

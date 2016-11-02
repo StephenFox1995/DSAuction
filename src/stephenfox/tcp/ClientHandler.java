@@ -54,20 +54,19 @@ public class ClientHandler implements Runnable {
   @Override
   public void run() {
     while(true) {
-      if (!outputMessageQueue.isEmpty()) {
-        String outputMessage = outputMessageQueue.remove();
-        System.out.println("Sending message to client: " + outputMessage + Thread.currentThread().getName());
-        // Send output message back to client.
-        sendMessage(outputMessage);
-      }
-
       readMessage();
-      if (!inputMessageQueue.isEmpty()) {
+      while (!inputMessageQueue.isEmpty()) {
         // Any message send from the client, forward to the bidder to handle.
         String inputMessage = inputMessageQueue.remove();
         bidder.handleClientMessage(inputMessage);
       }
 
+      while (!outputMessageQueue.isEmpty()) {
+        String outputMessage = outputMessageQueue.remove();
+        System.out.println("Sending message to client: " + outputMessage + Thread.currentThread().getName());
+        // Send output message back to client.
+        sendMessage(outputMessage);
+      }
     }
   }
 
