@@ -19,16 +19,11 @@ public class Client {
       socket = new Socket(host, port);
       System.out.println("Connected to server " + host.getCanonicalHostName() + " port " + port);
 
-      // Setup thread for keyboard inputs.
-      try {
-        setupServerResponseHandler();
-        setupKeyboardHandler();
+      setupServerResponseHandler();// Setup thread for server responses.
+      setupKeyboardHandler(); // Setup thread for keyboard inputs.
 
-      } catch (IOException e) {
-        System.out.println(e.getMessage());
-      }
     } catch (IOException e) {
-      System.out.println("Error opening socket. " + e.getMessage());
+      System.out.println("Error: " + e.getMessage());
     }
   }
 
@@ -43,7 +38,8 @@ public class Client {
   }
 
   /**
-   * Handles keyboard inputs on a separate thread.*/
+   * Handles keyboard inputs on a separate thread.
+   * */
   private class KeyboardInputHandler implements Runnable {
     private BufferedReader keyboard;
     private DataOutputStream outputStream;
