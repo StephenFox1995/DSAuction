@@ -2,6 +2,7 @@ package stephenfox.tcp;
 
 import java.io.IOException;
 import java.net.*;
+import java.util.ArrayList;
 
 
 /**
@@ -9,6 +10,11 @@ import java.net.*;
  */
 public class Server {
   private static Server sharedServer;
+  private ArrayList<ClientHandler> clients;
+
+  private Server() {
+    clients = new ArrayList<>();
+  }
 
   /**
    * Returns an instance of Server that is shared across the application
@@ -36,9 +42,9 @@ public class Server {
       System.out.println("Unable to open port: " + port + " " + e.getMessage());
       System.exit(1);
     }
-    do {
+    while(true) {
       handleConnection(serverSocket);
-    } while (true);
+    }
   }
 
   /**
@@ -51,13 +57,21 @@ public class Server {
     try {
       Socket client = serverSocket.accept();
       ClientHandler clientHandler = new ClientHandler(client);
+      messageClients("New bidder has joined");
+      clients.add(clientHandler);
       new Thread(clientHandler).start(); // Start new thread for this connection.
+      // Send startup message.
       clientHandler.messageClient(ServerCommandMessages.START_UP_MESSAGE);
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
+  public synchronized void messageClients(String message) {
+    for (ClientHandler c: clients) {
+      c.messageClient(message);
+    }
+  }
 
   /**
    * Private class to hold command messages that are used by the server.

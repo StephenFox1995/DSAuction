@@ -38,7 +38,8 @@ public class Auctioneer {
     }
     bidders.add(bidder);
     // Once the bidder has been registered, notify of the current AuctionItem.
-    bidder.auctionInfoMessage(auctionInfo + "The current auction item is: " + auctionItem.getName());
+    bidder.auctionInfoMessage(auctionInfo + "The current auction item is: " + auctionItem.getName()
+            + " starting price is: " + auctionItem.getAuctionPrice());
 
     System.out.println("New bidder has joined the auction");
   }
@@ -50,7 +51,8 @@ public class Auctioneer {
   private void messageBidders(String message) {
     System.out.println("Bidder count: " + bidders.size());
     for (Bidder b : bidders) {
-      b.auctionInfoMessage(message);
+      String m = new String(message);
+      b.auctionInfoMessage(m);
     }
   }
   /**

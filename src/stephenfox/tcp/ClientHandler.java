@@ -5,9 +5,10 @@ import stephenfox.auction.Bidder;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Scanner;
+import java.util.LinkedList;
+import java.util.Queue;
+
 
 /**
  * Created by stephenfox on 31/10/2016.
@@ -18,10 +19,14 @@ public class ClientHandler implements Runnable {
   private DataOutputStream outputStream;
   private Bidder bidder;
   private String outputMessage = "";
-
+  private Queue<String> outputMessageQueue;
+  private Queue<String> inputMessageQueue;
 
   public ClientHandler(Socket socket) {
     this.socket = socket;
+    this.inputMessageQueue = new LinkedList<String>();
+    this.outputMessageQueue = new LinkedList<String>();
+
     try {
       this.inputStream = new DataInputStream(this.socket.getInputStream());
       this.outputStream = new DataOutputStream(this.socket.getOutputStream());
@@ -43,22 +48,26 @@ public class ClientHandler implements Runnable {
    *
    * */
   public void messageClient(String message) {
-    outputMessage = message;
+    outputMessageQueue.add(message);
   }
 
   @Override
   public void run() {
-    String inputMessage = "";
     while(true) {
-      if (!outputMessage.isEmpty()) {
+      if (!outputMessageQueue.isEmpty()) {
+        String outputMessage = outputMessageQueue.remove();
         System.out.println("Sending message to client: " + outputMessage + Thread.currentThread().getName());
         // Send output message back to client.
         sendMessage(outputMessage);
       }
-      outputMessage = "";
-      // Any message send from the client, forward to the bidder to handle.
-      inputMessage = readMessage();
-      bidder.handleClientMessage(inputMessage);
+
+      readMessage();
+      if (!inputMessageQueue.isEmpty()) {
+        // Any message send from the client, forward to the bidder to handle.
+        String inputMessage = inputMessageQueue.remove();
+        bidder.handleClientMessage(inputMessage);
+      }
+
     }
   }
 
@@ -71,11 +80,11 @@ public class ClientHandler implements Runnable {
     }
   }
 
-  private String readMessage() {
+
+  private void readMessage() {
     try {
-      return inputStream.readUTF();
-    } catch (IOException e) {
-      return null;
-    }
+      String inputMessage = inputStream.readUTF();
+      inputMessageQueue.add(inputMessage);
+    } catch (IOException e) { }
   }
 }
