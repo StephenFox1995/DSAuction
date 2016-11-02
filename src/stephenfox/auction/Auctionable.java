@@ -10,5 +10,5 @@ public interface Auctionable {
   double getAuctionPrice();
   void increaseAuctionPrice(double amount) throws AuctionPriceException;
   boolean hasExpired();
-  void auction(AuctionExpiration expirationCallback);
+  void auction(AuctionTimeUpdate expirationCallback);
 }

@@ -1,9 +1,7 @@
 package stephenfox.tcp;
 
 import java.io.*;
-import java.net.InetAddress;
 import java.net.*;
-import java.util.Scanner;
 
 /**
  * Created by stephenfox on 31/10/2016.
@@ -14,7 +12,12 @@ public class Client {
   private KeyboardInputHandler keyboardInputHandler;
   private ServerResponseHandler serverResponseHandler;
 
-  public void accessServer(InetAddress host, int port) {
+  /**
+   * Sets up communication with the server via a socket.
+   * @param host The host to connect to.
+   * @param port The port number.
+   * */
+  public void connectToServer(InetAddress host, int port) {
     try {
       socket = new Socket(host, port);
       System.out.println("Connected to server " + host.getCanonicalHostName() + " port " + port);
@@ -51,8 +54,8 @@ public class Client {
 
     @Override
     public void run() {
-      String message = "";
-      System.out.print("Enter command:");
+      String message;
+      System.out.print("Enter command: ");
       while(true) {
         try {
           message = keyboard.readLine();

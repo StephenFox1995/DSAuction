@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * Created by stephenfox on 31/10/2016.
  */
-public class Auctioneer {
+public class Auctioneer implements AuctionTimeUpdate {
 
   private static Auctioneer sharedInstance;
   private AuctionItem auctionItem;
@@ -14,9 +14,8 @@ public class Auctioneer {
 
   private Auctioneer() {
     this.bidders = new ArrayList<>();
-    auctionItem = AuctionList.getRandomAuctionItem();
-    AuctionExpiration expiration = () -> messageBidders("Bid has expired.");
-    auctionItem.auction(expiration);
+    newAuctionItem(); // Set new auction item on startup.
+    auctionItem.auction(this);
   }
 
   public static Auctioneer sharedInstance() {
@@ -24,6 +23,24 @@ public class Auctioneer {
       sharedInstance = new Auctioneer();
     }
     return sharedInstance;
+  }
+
+  @Override
+  public void expired() {
+    messageBidders("Auction time has expired");
+    newAuctionItem();
+    messageBidders("The current auction item is: " + auctionItem.getName()
+            + " starting price is: " + auctionItem.getAuctionPrice());
+  }
+
+  @Override
+  public void thirtySecondUpdate() {
+    messageBidders("30 seconds left in this auction.");
+  }
+
+  private void newAuctionItem() {
+    auctionItem = null;
+    auctionItem = AuctionList.getRandomAuctionItem();
   }
 
   /**
@@ -40,8 +57,6 @@ public class Auctioneer {
     // Once the bidder has been registered, notify of the current AuctionItem.
     bidder.auctionInfoMessage(auctionInfo + "The current auction item is: " + auctionItem.getName()
             + " starting price is: " + auctionItem.getAuctionPrice());
-
-    System.out.println("New bidder has joined the auction");
   }
 
   /**

@@ -13,6 +13,7 @@ public class AuctionItem implements Auctionable {
   private String name = null;
   private Timer timer = null;
   private boolean expired = false;
+  private int timerNotifications = 0; // When == 2, auction for this item has ended.
 
   public AuctionItem(String name, double basePrice, double auctionPrice) {
     this.setName(name);
@@ -43,9 +44,9 @@ public class AuctionItem implements Auctionable {
 
   @Override
   public void increaseAuctionPrice(double amount) throws AuctionPriceException {
-    if (amount < this.auctionPrice) {
+    if (amount <= this.auctionPrice) {
       throw new AuctionPriceException("New auction price: " + amount +
-              " cannot be lower than the previous auction price: " + this.auctionPrice);
+              " must be higher than the previous auction price: " + this.auctionPrice);
     } else {
       this.auctionPrice = amount;
     }
@@ -57,15 +58,18 @@ public class AuctionItem implements Auctionable {
   }
 
   @Override
-  public void auction(AuctionExpiration expirationCallback) {
-//    timer.scheduleAtFixedRate(new TimerTask() {
-//      @Override
-//      public void run() {
-//        AuctionItem.this.expired = true;
-//        expirationCallback.expired();
-//      }
-//    },60 * 1 * 1000, 0);
-
+  public void auction(AuctionTimeUpdate auctionTimeUpdate) {
+    timer.scheduleAtFixedRate(new TimerTask() {
+      @Override
+      public void run() {
+        AuctionItem.this.timerNotifications += 1;
+        if (AuctionItem.this.timerNotifications == 2) { // Message callback that time has expired.
+          AuctionItem.this.expired = true;
+          auctionTimeUpdate.expired();
+        } else { // Message callback that 30 seconds has elapsed.
+          auctionTimeUpdate.thirtySecondUpdate();
+        }
+      }
+    }, 30 * 1 * 1000, 30 * 1 * 1000);
   }
-
 }

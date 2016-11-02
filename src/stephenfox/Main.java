@@ -31,7 +31,7 @@ public class Main {
       Client client = new Client();
       try {
         host = InetAddress.getLocalHost();
-        client.accessServer(host, PORT_NUMBER);
+        client.connectToServer(host, PORT_NUMBER);
       } catch (UnknownHostException e) {
         System.out.print("Could not get local host.");
         System.exit(1);
