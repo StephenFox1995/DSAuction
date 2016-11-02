@@ -11,7 +11,6 @@ public class Bidder implements Registrable {
   private ClientHandler clientHandler;
 
 
-
   /**
    * Constructs a new instance with reference to a ClientHandler object.
    * The ClientHandler object will be messaged, when new information about the current auction is anounced
@@ -37,7 +36,7 @@ public class Bidder implements Registrable {
     else if (message.contains(Server.ServerCommandMessages.CLIENT_BID_COMMAND)) {
       String[] commandSplit = message.split(" ");
       String bidAmountString;
-      double bidAmount = 0;
+      double bidAmount;
 
       if (commandSplit.length > 1) {
         bidAmountString = commandSplit[1];
@@ -71,7 +70,6 @@ public class Bidder implements Registrable {
   @Override
   public void auctionInfoMessage(String message) {
     // Message the client of new info about the auction.
-    System.out.println("Sending message: " + message);
     this.clientHandler.messageClient(message);
   }
 }

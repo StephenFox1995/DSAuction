@@ -1,6 +1,9 @@
 package stephenfox.tcp;
 
 import stephenfox.auction.Bidder;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -11,8 +14,8 @@ import java.util.Scanner;
  */
 public class ClientHandler implements Runnable {
   private Socket socket;
-  private Scanner input;
-  private PrintWriter output;
+  private DataInputStream inputStream;
+  private DataOutputStream outputStream;
   private Bidder bidder;
   private String outputMessage = "";
 
@@ -20,8 +23,8 @@ public class ClientHandler implements Runnable {
   public ClientHandler(Socket socket) {
     this.socket = socket;
     try {
-      this.input = new Scanner(this.socket.getInputStream());
-      this.output = new PrintWriter(this.socket.getOutputStream(), true);
+      this.inputStream = new DataInputStream(this.socket.getInputStream());
+      this.outputStream = new DataOutputStream(this.socket.getOutputStream());
       this.bidder = new Bidder(this);
     }
     catch (IOException e) {
@@ -46,17 +49,31 @@ public class ClientHandler implements Runnable {
   @Override
   public void run() {
     String inputMessage = "";
-    do {
-      // Send output message back to client.
-      output.println(outputMessage);
-
+    while(true) {
+      if (!outputMessage.isEmpty()) {
+        // Send output message back to client.
+        sendMessage(outputMessage);
+      }
       outputMessage = "";
       // Any message send from the client, forward to the bidder to handle.
-      if (input.hasNextLine()) {
-        inputMessage = input.nextLine();
-        bidder.handleClientMessage(inputMessage);
-      }
-    } while (!inputMessage.equals(Server.ServerCommandMessages.SERVER_CLOSE));
-    output.println("Bye Client!");
+      inputMessage = readMessage();
+      bidder.handleClientMessage(inputMessage);
+    }
+//    sendMessage("Bye");
+  }
+
+  private void sendMessage(String message) {
+    try {
+      outputStream.writeUTF(message);
+      outputStream.flush();
+    } catch (IOException e) { }
+  }
+
+  private String readMessage() {
+    try {
+      return inputStream.readUTF();
+    } catch (IOException e) {
+      return null;
+    }
   }
 }

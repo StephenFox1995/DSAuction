@@ -58,12 +58,14 @@ public class AuctionItem implements Auctionable {
 
   @Override
   public void auction(AuctionExpiration expirationCallback) {
-    timer.scheduleAtFixedRate(new TimerTask() {
-      @Override
-      public void run() {
-        AuctionItem.this.expired = true;
-        expirationCallback.expired();
-      }
-    }, 60 * 1 * 1000, 0);
+//    timer.scheduleAtFixedRate(new TimerTask() {
+//      @Override
+//      public void run() {
+//        AuctionItem.this.expired = true;
+//        expirationCallback.expired();
+//      }
+//    },60 * 1 * 1000, 0);
+
   }
+
 }

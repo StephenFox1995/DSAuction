@@ -15,6 +15,8 @@ public class Auctioneer {
   private Auctioneer() {
     this.bidders = new ArrayList<>();
     auctionItem = AuctionList.getRandomAuctionItem();
+    AuctionExpiration expiration = () -> messageBidders("Bid has expired.");
+    auctionItem.auction(expiration);
   }
 
   public static Auctioneer sharedInstance() {
@@ -36,8 +38,8 @@ public class Auctioneer {
     }
     bidders.add(bidder);
     // Once the bidder has been registered, notify of the current AuctionItem.
-    bidder.auctionInfoMessage("The current auction item is: " + auctionItem.getName());
-    bidder.auctionInfoMessage(auctionInfo);
+    bidder.auctionInfoMessage(auctionInfo + "The current auction item is: " + auctionItem.getName());
+
     System.out.println("New bidder has joined the auction");
   }
 
@@ -47,7 +49,6 @@ public class Auctioneer {
    * */
   private void messageBidders(String message) {
     for (Bidder b : bidders) {
-      System.out.println("Messaged");
       b.auctionInfoMessage(message);
     }
   }
@@ -56,8 +57,6 @@ public class Auctioneer {
    * @param auctionItem The auction item currently bidding.
    * */
   public void newBid(AuctionItem auctionItem) {
-    double newBidPrice = auctionItem.getAuctionPrice() - this.auctionItem.getAuctionPrice();
-
     messageBidders("New bid made for item: " + auctionItem.getName() + " price: " + auctionItem.getAuctionPrice());
     this.auctionItem = auctionItem;
   }
