@@ -56,9 +56,9 @@ public class Client {
     @Override
     public void run() {
       String message = "";
+      System.out.print("Enter command:");
       while(true) {
         try {
-          System.out.print("Enter command:");
           message = keyboard.readLine();
           outputStream.writeUTF(message);
           outputStream.flush();
@@ -85,6 +85,7 @@ public class Client {
           serverMessage = serverResponse.readUTF();
           System.out.println();
           System.out.println("Server says: " + serverMessage);
+          System.out.print("Enter Command:");
         } catch (IOException e) { }
       }
     }

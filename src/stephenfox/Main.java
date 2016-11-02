@@ -18,7 +18,7 @@ public class Main {
           "\tserver: Run program as server.\n" +
           "\tclient: Run program as client.";
 
-  public static final void main(String[] args) {
+  public static void main(String[] args) {
     if (args.length <= 0) {
       System.out.println("No command line arguments specified.");
       System.out.println(commandLineArgOptions);
