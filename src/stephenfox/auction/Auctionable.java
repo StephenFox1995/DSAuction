@@ -6,9 +6,10 @@ package stephenfox.auction;
 public interface Auctionable {
   void setName(String name);
   String getName();
+  void setHighestBidder(Bidder bidder); // Set the current highest bidder.
+  Bidder getHighestBidder();
   double getBasePrice();
   double getAuctionPrice();
   void increaseAuctionPrice(double amount) throws AuctionPriceException;
-  boolean hasExpired();
-  void auction(AuctionTimeUpdate expirationCallback);
+  void enterIntoAuction(AuctionTimeUpdate expirationCallback);
 }

@@ -12,10 +12,11 @@ public class Auctioneer implements AuctionTimeUpdate {
   private ArrayList<Bidder> bidders;
   private String auctionInfo = "Welcome to the auction, type \"bid\" to make a new bid.\n";
 
+
   private Auctioneer() {
     this.bidders = new ArrayList<>();
     newAuctionItem(); // Set new auction item on startup.
-    auctionItem.auction(this);
+    auctionItem.enterIntoAuction(this);
   }
 
   public static Auctioneer sharedInstance() {
@@ -31,6 +32,7 @@ public class Auctioneer implements AuctionTimeUpdate {
     newAuctionItem();
     messageBidders("The current auction item is: " + auctionItem.getName()
             + " starting price is: " + auctionItem.getAuctionPrice());
+    auctionItem.enterIntoAuction(this);
   }
 
   @Override
@@ -64,21 +66,18 @@ public class Auctioneer implements AuctionTimeUpdate {
    * @param message The message to send to the bidder.
    * */
   private void messageBidders(String message) {
-    System.out.println("Bidder count: " + bidders.size());
     for (Bidder b : bidders) {
-      String m = new String(message);
-      b.auctionInfoMessage(m);
+      b.auctionInfoMessage(message);
     }
   }
+
   /**
    * Makes a new bid for the current Auction item.
-   * @param auctionItem The auction item currently bidding.
+   * @param bidder The bidder.
+   * @param amount The new bid amount for item currently bidding.
    * */
-  public void newBid(AuctionItem auctionItem) {
-    messageBidders("New bid made for item: " + auctionItem.getName() + " price: " + auctionItem.getAuctionPrice());
-    this.auctionItem = auctionItem;
-  }
-  public AuctionItem getCurrentAuctionItem() {
-    return auctionItem;
+  public void newBid(Bidder bidder, double amount) throws AuctionPriceException {
+    this.auctionItem.increaseAuctionPrice(amount);
+    messageBidders("New bid made for item: " + auctionItem.getName() + " price: " + auctionItem.getAuctionPrice() + ". Auction time reset to 1 minute.");
   }
 }
