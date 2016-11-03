@@ -30,7 +30,7 @@ public class ClientHandler implements Runnable {
     try {
       // Set time out for socket, so input stream does not constantly block, which
       // gives the server the chance to check on updates that may have been sent from other clients, such
-      // as new bids or enterIntoAuction timeouts etc.
+      // as new bids or enterIntoAuctionWithAuctioneer timeouts etc.
       this.socket.setSoTimeout(1000);
       this.inputStream = new DataInputStream(this.socket.getInputStream());
       this.outputStream = new DataOutputStream(this.socket.getOutputStream());

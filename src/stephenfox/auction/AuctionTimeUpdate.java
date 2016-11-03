@@ -5,9 +5,9 @@ package stephenfox.auction;
  */
 public interface AuctionTimeUpdate {
   /**
-   * Called when an enterIntoAuction item has expired.
+   * Called when an enterIntoAuctionWithAuctioneer item has expired.
    * */
   void expired();
-  void thirtySecondUpdate(); // Called every time thirty seconds passes in the enterIntoAuction.
+  void thirtySecondUpdate(); // Called every time thirty seconds passes in the enterIntoAuctionWithAuctioneer.
 
 }

@@ -9,11 +9,11 @@ import stephenfox.tcp.Server;
 public class Bidder implements Registrable {
 
   private ClientHandler clientHandler;
-
+  private String name;
 
   /**
    * Constructs a new instance with reference to a ClientHandler object.
-   * The ClientHandler object will be messaged, when new information about the current enterIntoAuction is announced
+   * The ClientHandler object will be messaged, when new information about the current enterIntoAuctionWithAuctioneer is announced
    * from the auctioneer.
    * @param clientHandler The client handler object.
    * */
@@ -67,7 +67,15 @@ public class Bidder implements Registrable {
   /// Registrable interface.
   @Override
   public void auctionInfoMessage(String message) {
-    // Message the client of new info about the enterIntoAuction.
+    // Message the client of new info about the enterIntoAuctionWithAuctioneer.
     this.clientHandler.messageClient(message);
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
   }
 }

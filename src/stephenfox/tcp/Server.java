@@ -73,6 +73,6 @@ public class Server {
     public static final String UNKNOWN_COMMAND = "Unknown Command";
     public static final String INVALID_BID_FORMAT_COMMAND = "Unsupported format, expected: bid 00.00 got bid";
     public static final String CLIENT_BID_COMMAND = "bid"; // Command used to make new bid.
-    public static final String CLIENT_JOIN_AUCTION_COMMAND = "join"; // Command used to join the enterIntoAuction.
+    public static final String CLIENT_JOIN_AUCTION_COMMAND = "join"; // Command used to join the enterIntoAuctionWithAuctioneer.
   }
 }

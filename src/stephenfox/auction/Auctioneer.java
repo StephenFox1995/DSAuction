@@ -16,7 +16,7 @@ public class Auctioneer implements AuctionTimeUpdate {
   private Auctioneer() {
     this.bidders = new ArrayList<>();
     newAuctionItem(); // Set new auction item on startup.
-    auctionItem.enterIntoAuction(this);
+    auctionItem.enterIntoAuctionWithAuctioneer(this);
   }
 
   public static Auctioneer sharedInstance() {
@@ -28,11 +28,14 @@ public class Auctioneer implements AuctionTimeUpdate {
 
   @Override
   public void expired() {
-    messageBidders("Auction time has expired");
+    messageBidders("Auction time has expired, " +
+            auctionItem.getHighestBidder().getName() +
+            " won that auction, with a highest bidding price of: " +
+            auctionItem.getAuctionPrice());
     newAuctionItem();
     messageBidders("The current auction item is: " + auctionItem.getName()
             + " starting price is: " + auctionItem.getAuctionPrice());
-    auctionItem.enterIntoAuction(this);
+    auctionItem.enterIntoAuctionWithAuctioneer(this);
   }
 
   @Override
@@ -77,7 +80,8 @@ public class Auctioneer implements AuctionTimeUpdate {
    * @param amount The new bid amount for item currently bidding.
    * */
   public void newBid(Bidder bidder, double amount) throws AuctionPriceException {
-    this.auctionItem.increaseAuctionPrice(amount);
+    auctionItem.increaseAuctionPrice(amount);
+    auctionItem.setHighestBidder(bidder);
     messageBidders("New bid made for item: " + auctionItem.getName() + " price: " + auctionItem.getAuctionPrice() + ". Auction time reset to 1 minute.");
   }
 }

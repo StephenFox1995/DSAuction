@@ -27,8 +27,8 @@ public class AuctionItem implements Auctionable {
   @Override
   public void increaseAuctionPrice(double amount) throws AuctionPriceException {
     if (amount <= this.auctionPrice) {
-      throw new AuctionPriceException("New enterIntoAuction price: " + amount +
-              " must be higher than the previous enterIntoAuction price: " + this.auctionPrice);
+      throw new AuctionPriceException("New enterIntoAuctionWithAuctioneer price: " + amount +
+              " must be higher than the previous enterIntoAuctionWithAuctioneer price: " + this.auctionPrice);
     } else {
       this.auctionPrice = amount;
       // As new bid has been made restart the timer notifications.
@@ -38,7 +38,7 @@ public class AuctionItem implements Auctionable {
 
 
   @Override
-  public void enterIntoAuction(AuctionTimeUpdate auctionTimeUpdate) {
+  public void enterIntoAuctionWithAuctioneer(AuctionTimeUpdate auctionTimeUpdate) {
     // Start the timer notifications so bidders are updated on time remaining.
     startTimerNotifications(auctionTimeUpdate);
   }
