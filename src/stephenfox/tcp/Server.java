@@ -69,10 +69,11 @@ public class Server {
    * Private class to hold command messages that are used by the server.
    * */
   public static class ServerCommandMessages {
-    public static final String SERVER_CLOSE = "**CLOSE**";
+    public static final String CLIENT_EXIT = "exit";
     public static final String UNKNOWN_COMMAND = "Unknown Command";
     public static final String INVALID_BID_FORMAT_COMMAND = "Unsupported format, expected: bid 00.00 got bid";
     public static final String CLIENT_BID_COMMAND = "bid"; // Command used to make new bid.
+    public static final String CLIENT_SET_NAME_COMMAND = "setname"; // Command used to set the name for the client.
     public static final String CLIENT_JOIN_AUCTION_COMMAND = "join"; // Command used to join the enterIntoAuctionWithAuctioneer.
   }
 }

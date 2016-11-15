@@ -11,6 +11,7 @@ public class Client {
   private Socket socket;
   private KeyboardInputHandler keyboardInputHandler;
   private ServerResponseHandler serverResponseHandler;
+  private final String START_UP_MESSAGE = "To enter into the current auction type 'join' or 'help' for further options.";
 
   /**
    * Sets up communication with the server via a socket.
@@ -21,7 +22,7 @@ public class Client {
     try {
       socket = new Socket(host, port);
       System.out.println("Connected to server " + host.getCanonicalHostName() + " port " + port);
-
+      System.out.println(START_UP_MESSAGE);
       setupServerResponseHandler();// Setup thread for server responses.
       setupKeyboardHandler(); // Setup thread for keyboard inputs.
 
@@ -54,15 +55,16 @@ public class Client {
 
     @Override
     public void run() {
-      String message;
-      System.out.print("Enter command: ");
-      while(true) {
+      String message = "";
+      while(!message.equals("exit")) {
         try {
           message = keyboard.readLine();
           outputStream.writeUTF(message);
           outputStream.flush();
         } catch (IOException e) { }
       }
+      System.out.println("Goodbye!");
+      System.exit(0);
     }
   }
 
@@ -84,7 +86,6 @@ public class Client {
           serverMessage = serverResponse.readUTF();
           System.out.println();
           System.out.println("Server says: " + serverMessage);
-          System.out.print("Enter Command:");
         } catch (IOException e) { }
       }
     }

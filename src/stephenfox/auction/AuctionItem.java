@@ -13,7 +13,7 @@ public class AuctionItem implements Auctionable {
   private String name = null;
   private Timer timer = null;
   private int timerNotifications = 0; // When == 2, auction for this item has ended.
-
+  private boolean bidMade = false; // Flag whether or not bid was made.
 
 
   public AuctionItem(String name, double basePrice, double auctionPrice) {
@@ -30,6 +30,7 @@ public class AuctionItem implements Auctionable {
       throw new AuctionPriceException("New enterIntoAuctionWithAuctioneer price: " + amount +
               " must be higher than the previous enterIntoAuctionWithAuctioneer price: " + this.auctionPrice);
     } else {
+      setBidMade(true);
       this.auctionPrice = amount;
       // As new bid has been made restart the timer notifications.
       restartTimerNotifications();
@@ -39,6 +40,14 @@ public class AuctionItem implements Auctionable {
 
   @Override
   public void enterIntoAuctionWithAuctioneer(AuctionTimeUpdate auctionTimeUpdate) {
+    // TODO: reset everything here.
+    setBidMade(false);
+    auctionPrice = basePrice;
+    highestBidder = null;
+    restartTimerNotifications();
+    timer.cancel();
+    timer = null;
+
     // Start the timer notifications so bidders are updated on time remaining.
     startTimerNotifications(auctionTimeUpdate);
   }
@@ -49,17 +58,20 @@ public class AuctionItem implements Auctionable {
   }
 
   private void startTimerNotifications(AuctionTimeUpdate auctionTimeUpdate) {
-    timer.scheduleAtFixedRate(new TimerTask() {
+    timer = new Timer();
+    timer.schedule(new TimerTask() {
       @Override
       public void run() {
         AuctionItem.this.timerNotifications += 1;
         if (AuctionItem.this.timerNotifications == 2) { // Message callback that time has expired.
+          this.cancel();
           auctionTimeUpdate.expired();
+
         } else { // Message callback that 30 seconds has elapsed.
           auctionTimeUpdate.thirtySecondUpdate();
         }
       }
-    }, 30 * 1 * 1000, 30 * 1 * 1000);
+    }, 30000, 30000);
   }
 
   @Override
@@ -92,4 +104,11 @@ public class AuctionItem implements Auctionable {
     return this.basePrice;
   }
 
+  public boolean wasBidMade() {
+    return bidMade;
+  }
+
+  public void setBidMade(boolean bidMade) {
+    this.bidMade = bidMade;
+  }
 }

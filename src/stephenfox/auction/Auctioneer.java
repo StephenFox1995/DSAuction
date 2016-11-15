@@ -10,7 +10,7 @@ public class Auctioneer implements AuctionTimeUpdate {
   private static Auctioneer sharedInstance;
   private AuctionItem auctionItem;
   private ArrayList<Bidder> bidders;
-  private String auctionInfo = "Welcome to the auction, type \"bid\" to make a new bid.\n";
+  private String auctionInfo = "To auction, type \"bid <amount>\" e.g. bid 400 to make a new bid.\n";
 
 
   private Auctioneer() {
@@ -28,13 +28,22 @@ public class Auctioneer implements AuctionTimeUpdate {
 
   @Override
   public void expired() {
-    messageBidders("Auction time has expired, " +
-            auctionItem.getHighestBidder().getName() +
-            " won that auction, with a highest bidding price of: " +
-            auctionItem.getAuctionPrice());
-    newAuctionItem();
-    messageBidders("The current auction item is: " + auctionItem.getName()
-            + " starting price is: " + auctionItem.getAuctionPrice());
+    if (auctionItem.wasBidMade()) { // If there was a bid made, notify the bidders.
+      messageBidders("Auction time has expired, " +
+              auctionItem.getHighestBidder().getName() +
+              " won that auction, with a highest bidding price of: " +
+              auctionItem.getAuctionPrice());
+      newAuctionItem();
+      messageBidders("Auction item: " +
+              auctionItem.getName() +
+              " will now be auctioned, starting price is: " +
+              auctionItem.getAuctionPrice());
+    } else { // There was no bid made, re auction the item.
+      messageBidders("Auction time has expired. Auction item: " +
+              auctionItem.getName() +
+              " will be re auctioned, starting price is: " +
+              auctionItem.getAuctionPrice());
+    }
     auctionItem.enterIntoAuctionWithAuctioneer(this);
   }
 
@@ -59,9 +68,21 @@ public class Auctioneer implements AuctionTimeUpdate {
       return;
     }
     bidders.add(bidder);
+    bidder.setName("bidder" + bidders.size()); // Set the name of the bidder to bidderX
     // Once the bidder has been registered, notify of the current AuctionItem.
+    bidder.auctionInfoMessage("Welcome, you have been given the name: " + bidder.getName());
     bidder.auctionInfoMessage(auctionInfo + "The current auction item is: " + auctionItem.getName()
             + " starting price is: " + auctionItem.getAuctionPrice());
+  }
+
+  /**
+   * Removes a bidder from the auction.
+   * @param bidder The bidder to remove from the auction.
+   * */
+  public void removeBidder(Bidder bidder) {
+    if (bidders.contains(bidder)) {
+      bidders.remove(bidder);
+    }
   }
 
   /**
@@ -82,6 +103,11 @@ public class Auctioneer implements AuctionTimeUpdate {
   public void newBid(Bidder bidder, double amount) throws AuctionPriceException {
     auctionItem.increaseAuctionPrice(amount);
     auctionItem.setHighestBidder(bidder);
-    messageBidders("New bid made for item: " + auctionItem.getName() + " price: " + auctionItem.getAuctionPrice() + ". Auction time reset to 1 minute.");
+    messageBidders("New bid made for item: " +
+            auctionItem.getName() +
+            " price: " +
+            auctionItem.getAuctionPrice() +
+            " by bidder " + bidder.getName() +
+            ". Auction time reset to 1 minute.");
   }
 }

@@ -10,6 +10,7 @@ public class Bidder implements Registrable {
 
   private ClientHandler clientHandler;
   private String name;
+  private boolean joined = false;
 
   /**
    * Constructs a new instance with reference to a ClientHandler object.
@@ -32,6 +33,29 @@ public class Bidder implements Registrable {
     if (message.contains(Server.ServerCommandMessages.CLIENT_JOIN_AUCTION_COMMAND)) {
       // Register with auctioneer.
       auctioneer.registerBidder(this);
+      joined = true;
+      return;
+    }
+    else if (message.equals("help")) {
+      String helpMessage = "\nhelp menu\n" +
+              "exit : Exit the current auction.\n" +
+              "join : Join the current auction.\n" +
+              "bid : Bid a new amount. Use like the following: 'bid 400' to make a bid for 400.\n" +
+              "setname : Sets a new name for the bidder. Use like the following: 'setname stephen' to set bidder name as stephen." +
+              "help: Help instructions.";
+      auctionInfoMessage(helpMessage);
+      return;
+    }
+
+    if(!joined) { // Make sure the bidder is joined before they can make any command below.
+      auctionInfoMessage("Please 'join' to use that command.");
+      return;
+    }
+
+    if (message.equals(Server.ServerCommandMessages.CLIENT_EXIT)) {
+      auctioneer.removeBidder(this);
+      // Tell the client handler managing the connection for this class to close the connection.
+      clientHandler.closeConnection();
     }
     else if (message.contains(Server.ServerCommandMessages.CLIENT_BID_COMMAND)) {
       String[] commandSplit = message.split(" ");
@@ -45,18 +69,29 @@ public class Bidder implements Registrable {
           auctionInfoMessage(Server.ServerCommandMessages.INVALID_BID_FORMAT_COMMAND);
           return;
         }
-      } else {
+      }
+      else {
         auctionInfoMessage(Server.ServerCommandMessages.INVALID_BID_FORMAT_COMMAND);
         return;
       }
-
       try {
         auctioneer.newBid(this, bidAmount);
       } catch (AuctionPriceException e) {
         auctionInfoMessage(e.getMessage());
         return;
       }
-
+    }
+    else if (message.contains(Server.ServerCommandMessages.CLIENT_SET_NAME_COMMAND)) {
+      String[] commandSplit = message.split(" ");
+      if (commandSplit.length > 1) {
+        String oldName = name;
+        setName(commandSplit[1]);
+        auctionInfoMessage(oldName + " has been renamed to " + name);
+      }
+      else {
+        auctionInfoMessage(Server.ServerCommandMessages.INVALID_BID_FORMAT_COMMAND);
+        return;
+      }
     }
     else {
       auctionInfoMessage(Server.ServerCommandMessages.UNKNOWN_COMMAND);

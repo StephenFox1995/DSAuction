@@ -7,11 +7,14 @@ import java.util.Random;
  * Created by stephenfox on 31/10/2016.
  */
 public class AuctionList {
-  private static Object[][] items = {{"Computer", 375.00},
+  private static Object[][] items = {
+          {"Computer", 375.00},
           {"iPhone", 503.35},
           {"Laptop", 211.96},
           {"Chair", 29.02},
-          {"Door", 99.09}};
+          {"Door", 99.09},
+          {"Table", 100.09}
+  };
 
   public static AuctionItem getRandomAuctionItem() {
     Random rand = new Random();

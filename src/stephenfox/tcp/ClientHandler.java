@@ -7,6 +7,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 import java.util.Queue;
 
 
@@ -20,6 +21,7 @@ public class ClientHandler implements Runnable {
   private Bidder bidder;
   private Queue<String> outputMessageQueue;
   private Queue<String> inputMessageQueue;
+  private boolean closeClientConnection = false;
 
   public ClientHandler(Socket socket) {
     this.socket = socket;
@@ -46,6 +48,13 @@ public class ClientHandler implements Runnable {
     }
   }
 
+
+  // Closes the clients connection to the server.
+  public void closeConnection() {
+    closeClientConnection = true;
+    this.bidder = null;
+  }
+
   /**
    * Exposes a way to communicate back to a client machine.
    * @param message The message to send back to the client.
@@ -57,23 +66,29 @@ public class ClientHandler implements Runnable {
 
   @Override
   public void run() {
-    while(true) {
-      readMessage();
-      while (!inputMessageQueue.isEmpty()) {
-        // Any message send from the client, forward to the bidder to handle.
-        String inputMessage = inputMessageQueue.remove();
-        bidder.handleClientMessage(inputMessage);
-      }
+    while(!closeClientConnection) {
+      try {
+        readMessage();
+        while (!inputMessageQueue.isEmpty()) {
+          // Any message send from the client, forward to the bidder to handle.
+          String inputMessage = inputMessageQueue.remove();
+          bidder.handleClientMessage(inputMessage);
+        }
 
-      while (!outputMessageQueue.isEmpty()) {
-        String outputMessage = outputMessageQueue.remove();
-        System.out.println("Sending message to client: " + outputMessage + Thread.currentThread().getName());
-        // Send output message back to client.
-        sendMessage(outputMessage);
-      }
+        while (!outputMessageQueue.isEmpty()) {
+          String outputMessage = outputMessageQueue.remove();
+          // Send output message back to client.
+          sendMessage(outputMessage);
+        }
+      } catch (NoSuchElementException e) {}
     }
+    // Close the socket.
+    closeClientConnection();
   }
 
+  /**
+   * Sends a message to a client with the current socket data stream.
+   * @param message The message ot send to the client.*/
   private void sendMessage(String message) {
     try {
       outputStream.writeUTF(message);
@@ -83,12 +98,21 @@ public class ClientHandler implements Runnable {
     }
   }
 
-
+  /**
+   * Reads from the socket data stream and adds a message to message queue.
+   * */
   private void readMessage() {
     try {
       String inputMessage = inputStream.readUTF();
       inputMessageQueue.add(inputMessage);
     } catch (IOException e) {
     }
+  }
+
+  private void closeClientConnection() {
+    try {
+      socket.close();
+      System.out.println("Closed connection");
+    } catch (IOException e) { }
   }
 }
