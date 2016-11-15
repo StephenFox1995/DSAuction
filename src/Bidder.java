@@ -1,7 +1,3 @@
-package stephenfox.auction;
-
-import stephenfox.tcp.ClientHandler;
-import stephenfox.tcp.Server;
 
 /**
  * Created by stephenfox on 31/10/2016.
@@ -38,7 +34,7 @@ public class Bidder implements Registrable {
     }
     else if (message.equals("help")) {
       String helpMessage = "\nhelp menu\n" +
-              "exit : Exit the current auction.\n" +
+              "exit : Exit the current auction. Bidder must be in auction to exit. (Also closes connection to server.)\n" +
               "join : Join the current auction.\n" +
               "bid : Bid a new amount. Use like the following: 'bid 400' to make a bid for 400.\n" +
               "setname : Sets a new name for the bidder. Use like the following: 'setname stephen' to set bidder name as stephen." +

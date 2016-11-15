@@ -1,4 +1,3 @@
-package stephenfox.tcp;
 
 import java.io.*;
 import java.net.*;
@@ -85,7 +84,7 @@ public class Client {
         try {
           serverMessage = serverResponse.readUTF();
           System.out.println();
-          System.out.println("Server says: " + serverMessage);
+          System.out.println(serverMessage);
         } catch (IOException e) { }
       }
     }

@@ -1,4 +1,4 @@
-package stephenfox.auction;
+
 
 /**
  * Created by stephenfox on 01/11/2016.

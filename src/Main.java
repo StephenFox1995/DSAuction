@@ -1,7 +1,3 @@
-package stephenfox;
-
-import stephenfox.tcp.Client;
-import stephenfox.tcp.Server;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;

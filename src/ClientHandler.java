@@ -1,6 +1,3 @@
-package stephenfox.tcp;
-
-import stephenfox.auction.Bidder;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

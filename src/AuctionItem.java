@@ -1,4 +1,3 @@
-package stephenfox.auction;
 
 import java.util.Timer;
 import java.util.TimerTask;
