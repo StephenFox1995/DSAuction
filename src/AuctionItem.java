@@ -56,7 +56,7 @@ public class AuctionItem implements Auctionable {
     timerNotifications = 0;
   }
 
-  private void startTimerNotifications(AuctionTimeUpdate auctionTimeUpdate) {
+  private void startTimerNotifications(final AuctionTimeUpdate auctionTimeUpdate) {
     timer = new Timer();
     timer.schedule(new TimerTask() {
       @Override

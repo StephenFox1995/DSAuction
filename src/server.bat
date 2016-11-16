@@ -1,0 +1,1 @@
+java -classpath . Main server 1234
