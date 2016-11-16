@@ -12,7 +12,9 @@ public class AuctionList {
           {"Laptop", 211.96},
           {"Chair", 29.02},
           {"Door", 99.09},
-          {"Table", 100.09}
+          {"Table", 100.09},
+	  {"Mona Lisa", 2300.00},
+	  {"Toy Car", 10}
   };
 
   public static AuctionItem getRandomAuctionItem() {
