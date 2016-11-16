@@ -26,8 +26,8 @@ public class AuctionItem implements Auctionable {
   @Override
   public void increaseAuctionPrice(double amount) throws AuctionPriceException {
     if (amount <= this.auctionPrice) {
-      throw new AuctionPriceException("New bid price: " + amount +
-              " must be higher than the previous bid price or starting price of: " + this.auctionPrice);
+      throw new AuctionPriceException("New enterIntoAuctionWithAuctioneer price: " + amount +
+              " must be higher than the previous enterIntoAuctionWithAuctioneer price: " + this.auctionPrice);
     } else {
       setBidMade(true);
       this.auctionPrice = amount;
